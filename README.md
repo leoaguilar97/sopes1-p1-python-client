@@ -25,9 +25,20 @@ Se envían los datos de la siguiente manera:
 Se requiere Python3 de 64 bits.
 Se utilizó Python 3.8.6 y pip 20.2.3
 
+Instalar virtualenv
 `$ ​pip install virtualenv​`
+
+Activar el ambiente
 `$ . venv/Scripts/activate`
+
+Actualizar pip
 `$ pip install --upgrade pip`
-`$ pip install -r requirements.txt`
+
+Moverse al directorio del código
 `$ cd code`
+
+Instalar todas las dependencias
+`$ pip install -r requirements.txt`
+
+Compilar el código de la app
 `$ python app.py`
