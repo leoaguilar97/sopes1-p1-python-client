@@ -2,6 +2,7 @@ import sys
 import time
 import random
 from warnings import catch_warnings
+from colored import colors
 from requests.sessions import Request
 import spacy
 import colored
@@ -15,6 +16,8 @@ from consolemenu.format import *
 from consolemenu.items import *
 
 author_names = []
+all_author_colors = [163, 154, 9, 4, 1, 13, 17, 18, 22, 23, 25, 38, 40, 50, 52, 53, 94, 166, 8, 63, 27, 75, 124, 147, 88, 2, 6, 110, 160, 200, 202, 102, 130, 86]
+
 data = []
 ip = ""
 
@@ -31,7 +34,6 @@ orange = colored.fg("white") + \
 
 red = colored.fg("dark_red_1") + colored.bg("light_red") + colored.attr("bold")
 
-
 def set_custom_boundaries(doc):
     for token in doc[:-1]:
         if token.text == "...":
@@ -42,10 +44,8 @@ def set_custom_boundaries(doc):
             doc[token.i].is_sent_start = True
     return doc
 
-
 nlp = spacy.load("es_core_news_sm")
 nlp.add_pipe(set_custom_boundaries, before="parser")
-
 
 def print_data():
 
@@ -61,8 +61,7 @@ def print_data():
     print(stylize("Hay " + str(len(author_names)) + " emparejados...", magenta))
 
     for author in author_names:
-        print("*", stylize(author, magenta))
-
+        print("*", stylize(" " + author["name"] + " ", colored.fg("white") + colored.bg(author["color"]) + colored.attr("bold")))
 
 def progress(count, total, status=''):
     bar_len = 50
@@ -73,7 +72,6 @@ def progress(count, total, status=''):
 
     sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', status))
     sys.stdout.flush()
-
 
 def leer_archivo():
 
@@ -140,7 +138,7 @@ def leer_archivo():
 
     for x in range(autors_length):
         author_name = names.get_full_name()
-        author_names.append(author_name)
+        author_names.append({ "name" : author_name, "color": random.choice(all_author_colors) })
         progress(x, autors_length, status='Buscando un autor')
         time.sleep(0.1)
 
@@ -159,7 +157,7 @@ def leer_archivo():
     data.clear()
     for sent in sentences:
         i = i + 1
-        data.append([str(sent).strip(), str(random.choice(author_names)).strip()])
+        data.append([str(sent).strip(), random.choice(author_names)])
         progress(i, total, status='Emparejando oraciones')
         #time.sleep(0.05)
 
@@ -246,8 +244,7 @@ def table_data():
     tbl_data[0] = ['#', 'Oración', 'Autor']
 
     for i in range(0, len(data)):
-        tbl_data[i + 1] = [i + 1, data[i][0], data[i][1]]
-
+        tbl_data[i + 1] = [i + 1, data[i][0], data[i][1]["name"]]
 
     table = DoubleTable(tbl_data, " Datos ")
     if not table.ok:
@@ -265,6 +262,35 @@ def table_data():
 
     print("")
     print_data()
+    print("")
+    Screen().input('Presiona [Enter] para continuar')
+
+def list_data():
+    i = 1
+    biggest = 0
+    for row in data: 
+        sent = str(" " + row[0] + " ").strip()
+        sl = len(sent)
+        biggest = biggest if biggest > sl else sl
+
+        author = str(" " + str(i) + ". " + row[1]["name"] + " >> ").strip()
+        al = len(author)
+        
+        biggest = biggest if biggest > al else al
+
+    for row in data:
+        color = colored.fg("white") + colored.bg(row[1]["color"])
+        author = str(" " + str(i) + ". " + row[1]["name"] + " >> ").strip()
+        sent = str(" " + row[0] + " ")
+
+        author = author.strip().ljust(biggest)
+        sent = sent.strip().ljust(biggest)
+
+        print(stylize(author, color))
+        print(stylize(sent, color))
+
+        i = i + 1
+
     print("")
     Screen().input('Presiona [Enter] para continuar')
 
@@ -287,14 +313,20 @@ def create_menu():
     read_ip_item = FunctionItem(
         "Ingresar dirección del load-balancer", leer_ip)
     tbl_show_item = FunctionItem(
-        "Mostrar datos recolectados del archivo", table_data)
+        "Mostrar datos recolectados del archivo (como tabla)", table_data)
+
+    list_show_item = FunctionItem(
+        "Mostrar datos recolectados del archivo (como lista)", list_data)
 
     menu.append_item(read_file_item)
     menu.append_item(read_ip_item)
     menu.append_item(tbl_show_item)
+    menu.append_item(list_show_item)
 
     menu.start()
     menu.join()
+
+
 
 if __name__ == '__main__':
     for x in range(10):
