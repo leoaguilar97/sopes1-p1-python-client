@@ -18,7 +18,7 @@ Se envían los datos de la siguiente manera:
     "author": "valor",
     "sentence": "valor"
 }
-`
+```
 
 ## PARA CORRER EL CÓDIGO
 
