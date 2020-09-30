@@ -13,21 +13,21 @@ obtenidos del último análisis y podrá mostrarlos.
 
 Se envían los datos de la siguiente manera:
 
+```json 
 {
     "author": "valor",
     "sentence": "valor"
 }
+`
 
 ## PARA CORRER EL CÓDIGO
 
 Se requiere Python3 de 64 bits.
 Se utilizó Python 3.8.6 y pip 20.2.3
 
-`
-$ ​pip install virtualenv​
-$ . venv/Scripts/activate
-$ pip install --upgrade pip
-$ pip install -r requirements.txt
-$ cd code
-$ python app.py
-`
+`$ ​pip install virtualenv​`
+`$ . venv/Scripts/activate`
+`$ pip install --upgrade pip`
+`$ pip install -r requirements.txt`
+`$ cd code`
+`$ python app.py`
