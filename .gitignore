@@ -23,6 +23,7 @@ wheels/
 pip-wheel-metadata/
 share/python-wheels/
 test_api/
+test_api_2/
 *.egg-info/
 .installed.cfg
 *.egg

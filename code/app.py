@@ -181,14 +181,14 @@ def leer_ip():
 
     print(stylize(" INTRODUCIR DIRECCION IP ", green))
     print("")
-    print(stylize(" Ejemplo: http://127.0.0.1", magenta))
+    print(stylize(" Ejemplo: http://35.239.200.16", magenta))
     print("")
 
     while True:
         try:
             ip = str(Screen().input(">> Dirección: ")).lower()
             if (ip == ""):
-                ip = "127.0.0.1:3000"
+                ip = "35.239.200.16"
             if not "http" in ip:
                 ip = "http://" + ip
             break
@@ -209,7 +209,7 @@ def leer_ip():
 
         print(stylize(" PETICION CORRECTA ", blue))
         print("")
-        print(stylize("Respuesta: " + str(x.json()), magenta))
+        print(stylize("Respuesta: " + str(x.text), magenta))
         print(stylize("Codigo: " + str(x.status_code), magenta))
 
     except requests.exceptions.Timeout:
@@ -328,6 +328,7 @@ def list_data():
     Screen().input('Presiona [Enter] para continuar')
 
 def post_data():
+    global ip
     if (ip == ""):
         print(stylize(" POR FAVOR INGRESA LA DIRECCIÓN ", orange))
         print("")
@@ -349,6 +350,7 @@ def post_data():
     i = 1
     errored = 0
     success = 0
+
     for s in data:
         pd = { "author": s[1]["name"], "sentence": s[0] }
         pdn = len(pd["sentence"])
@@ -363,8 +365,8 @@ def post_data():
             code = x.status_code
             recieved_data = x.json()
             
-            if (code == 200):
-                print(stylize(" OK 200 ", green))
+            if (code == 200 or code == 201):
+                print(stylize(" OK " + str(code) + " ", green))
                 status = str(recieved_data)
                 success = success + 1
             else:
