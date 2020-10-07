@@ -40,6 +40,10 @@ def set_custom_boundaries(doc):
     for token in doc[:-1]:
         if token.text == "...":
             doc[token.i+1].is_sent_start = True
+        if token.text == ":":
+            doc[token.i+1].is_sent_start = True
+        if token.text == ";":
+            doc[token.i+1].is_sent_start = True
         if token.text == "–":
             doc[token.i].is_sent_start = True
         if token.text == "-":
